@@ -128,7 +128,7 @@ class Request(object):
         """
         Can be overriden to add custom fields to results, etc.
         """
-        pass
+        return result
 
     def call(self):
         """
@@ -152,8 +152,7 @@ class Request(object):
                     result_xml = node.toxml()
                     tree = ElementTree.fromstring(result_xml)
                     result = Result(tree)
-                    self.patch_result(result, result_xml)
-                    yield result
+                    yield self.patch_result(result, result_xml)
                 elif node.tagName == 'Hits':
                     doc.expandNode(node)
                     tree = ElementTree.fromstring(node.toxml())
@@ -163,11 +162,9 @@ class Request(object):
         """
         Builds query to access to cghub server.
         """
-        if not self.query:
-            return None
         parts = []
         for key, value in self.query.iteritems():
-            if isinstance(value, list):
+            if isinstance(value, list) or isinstance(value, tuple):
                 value_str = ' OR '.join([
                         urllib2.unquote(v) for v in value])
                 value_str = urllib2.quote(('(%s)' % value_str)
