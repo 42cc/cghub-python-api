@@ -16,7 +16,7 @@ class UtilsTestCase(unittest.TestCase):
             'state': 'live'}
     TEST_FILE_PATH = os.path.join(
                             os.path.dirname(__file__),
-                            'data/details_10_results.xml')
+                            'data/wsapi_details_10_results.xml')
 
     def test_urlopen(self):
         f = open(self.TEST_FILE_PATH, 'r')

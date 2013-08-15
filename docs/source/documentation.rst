@@ -15,3 +15,11 @@ Viewing documentation in browser
     cd build/html/
     python -m SimpleHTTPServer 8001
     firefox http://127.0.0.1:8001
+
+or:
+
+.. code-block:: bash
+
+    cd docs
+    make serve
+    firefox http://127.0.0.1:8001
