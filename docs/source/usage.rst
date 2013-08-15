@@ -27,6 +27,15 @@ Data can be returned in json or xml format.
 The later returns more details for each query, while the former returns just enough information that could be used
 by the download program.
 
+In case of using WSI API, ``cghub_python_api.WSAPIRequest`` should be used.
+
+SOLR API
+--------
+
+This package also can be used with `SOLR <http://lucene.apache.org/solr/>`__.
+
+In case of using SOLR, ``cghub_python_api.SOLRRequest`` should be used.
+
 Using Python API
 ----------------
 
@@ -34,7 +43,7 @@ Example:
 
 .. code-block:: python
 
-    >>> from cghub_python_api import Request
+    >>> from cghub_python_api import WSAPIRequest as Request
     >>> results = []
     >>> request = Request(query={'analysis_id': ['016cc2ca-db11-44af-b846-18e9275a4c4b', '01a589db-02d8-4d75-a2da-bb0bd8140a32']})
     >>> for result in request.call():
@@ -47,13 +56,13 @@ Example:
     BRCA
     >>> print results[0]['disease_abbr'].text
     BRCA
-    >>> print results[1]['files.file.filename'].text
+    >>> print results[1]['filename'].text
     UNCID_1176640.2bdc311e-59cc-449f-b8dc-6662052678fd.sorted_genome_alignments.bam
-    >>> print results[1]['files.file.0.filename'].text
+    >>> print results[1]['filename.0'].text
     UNCID_1176640.2bdc311e-59cc-449f-b8dc-6662052678fd.sorted_genome_alignments.bam
-    >>> print results[1]['files.file.1.filename'].text
+    >>> print results[1]['filename.1'].text
     UNCID_1176640.2bdc311e-59cc-449f-b8dc-6662052678fd.sorted_genome_alignments.bam.bai
-    >>> print results[1]['files.file.0.checksum'].attrib
+    >>> print results[1]['checksum.0'].attrib
     {'type': 'MD5'}
     >>> results[0].analysis_id.exist
     True

@@ -18,5 +18,7 @@ Result:
 
     test_request (tests.test_request.RequestTestCase) ... ok
     test_request_build_query (tests.test_request.RequestTestCase) ... ok
+    test_request (tests.test_request.SOLRRequestTestCase) ... ok
+    test_request_build_query (tests.test_request.SOLRRequestTestCase) ... ok
     test_urlopen (tests.test_utils.UtilsTestCase) ... ok
     test_urlopen_repeat_requests_on_urlerror (tests.test_utils.UtilsTestCase) ... ok

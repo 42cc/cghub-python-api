@@ -6,7 +6,7 @@ API Documentation
 Main Interface
 --------------
 
-All functionality is implemented in class ``cghub_python_api.Request``.
+All functionality are implemented in classes ``cghub_python_api.WSAPIRequest`` and ``cghub_python_api.SOLRRequest``.
 
 As argument it takes an query. Query should be a dict, for example:
 
@@ -26,7 +26,7 @@ it will be translated into string:
     will become
     '(phs000178 OR *Other_Sequencing_Multiisolate)'
 
-Also next attributes can be specified while creating Request object:
+Also next attributes can be specified while creating *Request object:
 
     - offset - how many results should be skipped
     - limit - how many records output should have
@@ -40,6 +40,7 @@ Example:
 
 .. code-block:: python
 
+    >>> from cghub_python_api import WSAPIRequest as Request
     >>> request = Request(query={'state': 'live'}, limit=10)
     >>> for i in request.call():
     ...     print i
@@ -59,36 +60,25 @@ Example:
     print result.analysis_id
     print result['analysis_id']
 
-
-To access to deeper elements like a filename:
-
-.. code-block:: xml
-
-    <files>
-        <file>
-            <filename>somefilename.txt</filename>
-
-can be used next syntax:
-
-.. code-block:: python
-
-    print result['files.file.filename']
-
 If files node has few file nodes, can be used indexes:
 
 .. code-block:: python
 
-    print result['files.file.0.filename']
+    print result['filename.0']
+
+Default index - 0.
 
 Every node has ``text`` and ``attrib`` attributes.
 The first returns text inside element and the second - dict with attributes specified inside tag:
 
 .. code-block:: python
 
-    >>> print results[1]['files.file.1.filename'].text
+    >>> print results[1]['filename.0'].text
     UNCID_1176640.2bdc311e-59cc-449f-b8dc-6662052678fd.sorted_genome_alignments.bam.bai
-    >>> print results[1]['files.file.0.checksum'].attrib
+    >>> print results[1]['checksum.0'].attrib
     {'type': 'MD5'}
+    # If used SOLRRequest, checksum type attribute will be stored in:
+    print results[1]['checksum_method.0'].text
 
 If requested node was not found, will be returned cghub_python_api.api.NonExistent object.
 To check is requested node exists can be used 'exist' attribute:
@@ -110,4 +100,4 @@ we can implement this by overriding patch_result method:
     class MyRequst(Request):
 
         def patch_result(self, result, result_xml):
-            result.filename = result['files.file.0.filename']
+            result.main_file_name = result['filename.0']
