@@ -125,8 +125,8 @@ class SOLRRequestTestCase(RequestTestCase):
                 'state': ['live']},
             'kwargs': {'limit': 10, 'offset': 10, 'sort_by': '-state'},
             'url': 'http://127.0.0.1:8983/solr/select/?q=study%3A%2A'
-                'Other_Sequencing_Multiisolate+state%3A'
-                '%28live%29&start=10&rows=10&sort=state%2Bdesc'
+                'Other_Sequencing_Multiisolate+state%3A%28live%29&'
+                'start=10&rows=10&sort=state+desc'
         }
     ]
 
