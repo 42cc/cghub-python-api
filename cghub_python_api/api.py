@@ -193,7 +193,7 @@ class WSAPIRequest(BaseRequest):
                     doc.expandNode(node)
                     # convert to python object
                     # http://docs.python.org/2/library/xml.etree.elementtree.html
-                    result_xml = node.toxml()
+                    result_xml = node.toxml(encoding='utf-8')
                     tree = ElementTree.fromstring(result_xml)
                     result = Result(tree)
                     yield self.patch_result(result, result_xml)
@@ -286,7 +286,7 @@ class SOLRRequest(BaseRequest):
                     doc.expandNode(node)
                     # convert to python object
                     # http://docs.python.org/2/library/xml.etree.elementtree.html
-                    result_xml = node.toxml()
+                    result_xml = node.toxml(encoding='utf-8')
                     tree = ElementTree.fromstring(result_xml)
                     result = Result(tree)
                     yield self.patch_result(result, result_xml)
@@ -318,6 +318,8 @@ class SOLRRequest(BaseRequest):
             parts.append('='.join(['start', str(self.offset)]))
         if self.limit:
             parts.append('='.join(['rows', str(self.limit)]))
+        else:
+            parts.append('rows=1000000')
         if self.sort_by:
             if self.sort_by[0] == '-':
                 parts.append('='.join([
