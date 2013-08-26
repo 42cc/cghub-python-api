@@ -25,8 +25,8 @@ class RequestTestCase(unittest.TestCase):
                 'state': 'live'},
             'kwargs': {},
             'url': 'https://192.35.223.223/cghub/metadata/analysisDetail?'
-            'study=%28phs000178%20OR%20%2AOther_Sequencing_Multiisolate%20OR%20phs0004%2A%29&'
-            'disease_abbr=%28BLCA%20OR%20OR%20OR%20BRCA%29&state=live'
+                'study=(phs000178+OR+%2AOther_Sequencing_Multiisolate+OR+phs0004%2A)&'
+                'disease_abbr=(BLCA+OR+OR+OR+BRCA)&state=live'
         }, {
             'query': {
                 'study': '*Other_Sequencing_Multiisolate',
@@ -35,14 +35,14 @@ class RequestTestCase(unittest.TestCase):
             'kwargs': {},
             'url': 'https://192.35.223.223/cghub/metadata/analysisDetail?'
                 'study=%2AOther_Sequencing_Multiisolate&'
-                'last_modified=%5BNOW-1MONTH%20TO%20NOW%5D&state=%28live%29'
+                'last_modified=%5BNOW-1MONTH%2BTO%2BNOW%5D&state=(live)'
         }, {
             'query': {
                 'study': '*Other_Sequencing_Multiisolate',
                 'state': ['live']},
             'kwargs': {'limit': 10, 'offset': 10, 'sort_by': '-state'},
             'url': 'https://192.35.223.223/cghub/metadata/analysisDetail?'
-                'study=%2AOther_Sequencing_Multiisolate&state=%28live%29&'
+                'study=%2AOther_Sequencing_Multiisolate&state=(live)&'
                 'start=10&rows=10&sort_by=state:desc'
         }
     ]
@@ -107,26 +107,26 @@ class SOLRRequestTestCase(RequestTestCase):
                 'disease_abbr': ['BLCA', 'OR', 'BRCA'],
                 'state': 'live'},
             'kwargs': {},
-            'url': 'http://127.0.0.1:8983/solr/select/?q=study%3A%28phs000178%20OR%20'
-                '%2AOther_Sequencing_Multiisolate%20OR%20phs0004%2A%29+disease_abbr%3A%28BLCA%20'
-                'OR%20OR%20OR%20BRCA%29+state%3Alive'
+            'url': 'http://127.0.0.1:8983/solr/select/?'
+                'q=study%3A(phs000178+OR+%2AOther_Sequencing_Multiisolate+OR+'
+                'phs0004%2A)+disease_abbr%3A(BLCA+OR+OR+OR+BRCA)+state%3Alive&rows=1000000'
         }, {
             'query': {
                 'study': '*Other_Sequencing_Multiisolate',
                 'state': ['live'],
                 'last_modified': '[NOW-1MONTH+TO+NOW]'},
             'kwargs': {},
-            'url': 'http://127.0.0.1:8983/solr/select/?q=study%3A%2A'
-                'Other_Sequencing_Multiisolate+last_modified%3A'
-                '%5BNOW-1MONTH%20TO%20NOW%5D+state%3A%28live%29'
+            'url': 'http://127.0.0.1:8983/solr/select/?'
+                'q=study%3A%2AOther_Sequencing_Multiisolate+'
+                'last_modified%3A%5BNOW-1MONTH%2BTO%2BNOW%5D+state%3A(live)&rows=1000000'
         }, {
             'query': {
                 'study': '*Other_Sequencing_Multiisolate',
                 'state': ['live']},
             'kwargs': {'limit': 10, 'offset': 10, 'sort_by': '-state'},
-            'url': 'http://127.0.0.1:8983/solr/select/?q=study%3A%2A'
-                'Other_Sequencing_Multiisolate+state%3A%28live%29&'
-                'start=10&rows=10&sort=state+desc'
+            'url': 'http://127.0.0.1:8983/solr/select/?'
+                'q=study%3A%2AOther_Sequencing_Multiisolate+'
+                'state%3A(live)&start=10&rows=10&sort=state+desc'
         }
     ]
 
