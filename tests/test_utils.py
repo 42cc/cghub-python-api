@@ -35,13 +35,32 @@ class UtilsTestCase(unittest.TestCase):
             raise urllib2.URLError('URL Error message')
         with patch('urllib2.urlopen') as urllib2_urlopen_mock:
             urllib2_urlopen_mock.side_effect = raise_urlerror
-            url = '%s?%s' % (self.TEST_URL, self.TEST_QUERY)
+            url = '%s?%s' % (self.TEST_URL, '&'.join(
+                    ['%s=%s' for key, value in self.TEST_QUERY.iteritems()]))
             attempts_count = 3
             try:
                 f = urlopen(url=url, max_attempts=attempts_count)
             except urllib2.URLError as e:
                 self.assertIn('%d attempts' % attempts_count, str(e))
             self.assertEqual(urllib2_urlopen_mock.call_count, attempts_count)
+
+    def test_error_message_on_bad_request(self):
+        message = 'Bad request'
+        def raise_httperror(req):
+            raise urllib2.HTTPError(
+                    url='http://example.com', code=400,
+                    msg=message, hdrs=None, fp=None)
+        with patch('urllib2.urlopen') as urllib2_urlopen_mock:
+            urllib2_urlopen_mock.side_effect = raise_httperror
+            url = '%s?%s' % (self.TEST_URL, '&'.join(
+                    ['%s=%s' for key, value in self.TEST_QUERY.iteritems()]))
+            attempts_count = 3
+            try:
+                f = urlopen(url=url, max_attempts=attempts_count)
+            except urllib2.URLError as e:
+                self.assertNotIn('%d attempts' % attempts_count, str(e))
+                self.assertIn(message, str(e))
+            self.assertEqual(urllib2_urlopen_mock.call_count, 1)
 
 
 if __name__ == '__main__':
