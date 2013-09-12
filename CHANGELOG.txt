@@ -3,3 +3,6 @@
 
 === 0.2 ===
 - Ability to work with SOLR
+
+=== 0.21 ===
+- API accepts wsapi/solr json response

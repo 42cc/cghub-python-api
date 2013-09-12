@@ -58,5 +58,8 @@ setup(
         'Topic :: Software Development :: Libraries',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Topic :: Scientific/Engineering :: Medical Science Apps.'
-    ]
+    ],
+    install_requires=[
+        'ijson',
+    ],
 )
