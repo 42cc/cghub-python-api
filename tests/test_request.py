@@ -14,6 +14,9 @@ class RequestTestCase(unittest.TestCase):
     TEST_FILE_PATH = os.path.join(
                             os.path.dirname(__file__),
                             'data/wsapi_details_10_results.xml')
+    TEST_JSON_FILE_PATH = os.path.join(
+                            os.path.dirname(__file__),
+                            'data/wsapi_details_1_result.json')
     TEST_QUERY = {
                 'last_modified': '[NOW-64DAY+TO+NOW-63DAY]',
                 'state': 'live'}
@@ -68,9 +71,7 @@ class RequestTestCase(unittest.TestCase):
 
     def test_request(self):
         f = open(self.TEST_FILE_PATH, 'r')
-        data = f.read()
-        io = StringIO(data)
-        with patch.object(urllib2, 'urlopen', return_value=io) as urllib2_urlopen_mock:
+        with patch.object(urllib2, 'urlopen', return_value=f) as urllib2_urlopen_mock:
             request = self.REQUEST_CLASS(query=self.TEST_QUERY)
             results = []
             for result in request.call():
@@ -80,18 +81,30 @@ class RequestTestCase(unittest.TestCase):
             self._test_access_to_attributes(results[0])
             self.assertEqual(urllib2_urlopen_mock.call_count, 1)
 
-    def test_request_build_query(self):
+    def test_json_request(self):
+        f = open(self.TEST_JSON_FILE_PATH, 'r')
+        with patch.object(urllib2, 'urlopen', return_value=f) as urllib2_urlopen_mock:
+            request = self.REQUEST_CLASS(
+                    query=self.TEST_QUERY,
+                    format=self.REQUEST_CLASS.FORMAT_JSON)
+            results = []
+            for result in request.call():
+                results.append(result)
+            self.assertEqual(len(results), 1)
+            self.assertTrue(results[0]['analysis_id'])
+            self.assertEqual(urllib2_urlopen_mock.call_count, 1)
 
+    def test_request_build_query(self):
         f = open(self.TEST_FILE_PATH, 'r')
         data = f.read()
         io = StringIO(data)
         for data in self.QUERY_TEST_DATA_SET:
             io.seek(0)
-            with patch.object(self.REQUEST_CLASS, 'get_xml_file', return_value=io) as get_xml_file_mock:
+            with patch.object(self.REQUEST_CLASS, 'get_source_file', return_value=io) as get_source_file_mock:
                 request = self.REQUEST_CLASS(query=data['query'], **data['kwargs'])
                 for i in request.call():
                     pass
-                get_xml_file_mock.assert_called_once_with(data['url'])
+                get_source_file_mock.assert_called_once_with(data['url'])
 
 
 class SOLRRequestTestCase(RequestTestCase):
@@ -100,6 +113,9 @@ class SOLRRequestTestCase(RequestTestCase):
     TEST_FILE_PATH = os.path.join(
                             os.path.dirname(__file__),
                             'data/solr_details_10_results.xml')
+    TEST_JSON_FILE_PATH = os.path.join(
+                            os.path.dirname(__file__),
+                            'data/solr_details_1_result.json')
     QUERY_TEST_DATA_SET = [
         {
             'query': {
